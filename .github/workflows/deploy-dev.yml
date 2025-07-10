@@ -42,7 +42,7 @@ jobs:
         uses: cloudtype-github-actions/deploy@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
-          project: jay45652/cicdtest
+          project: jay45652/cicd
           stage: main
           yaml: |
             name: cicd
