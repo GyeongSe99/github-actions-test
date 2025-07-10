@@ -37,19 +37,19 @@ class GithubactionTestApplicationTests {
                 .andExpect(content().string("Hello World"));  // 응답 내용이 "Hello World"인지 확인
     }
 
-    @Test
-    public void testHealthz() throws Exception {
-        mockMvc.perform(get("/healthz"))  // "/healthz" URL에 GET 요청 보내기
-                .andExpect(status().isOk())  // HTTP 상태 코드 200 (OK)
-                .andExpect(content().string("healthz"));  // 응답 내용이 "healthz"인지 확인
-    }
-
-    // 틀린 코드
 //    @Test
-//    public void testHealthz_fail() throws Exception {
+//    public void testHealthz() throws Exception {
 //        mockMvc.perform(get("/healthz"))  // "/healthz" URL에 GET 요청 보내기
 //                .andExpect(status().isOk())  // HTTP 상태 코드 200 (OK)
-//                .andExpect(content().string("hi"));  // 일부러 틀린 코드
+//                .andExpect(content().string("healthz"));  // 응답 내용이 "healthz"인지 확인
 //    }
+
+    // 틀린 코드
+    @Test
+    public void testHealthz_fail() throws Exception {
+        mockMvc.perform(get("/healthz"))  // "/healthz" URL에 GET 요청 보내기
+                .andExpect(status().isOk())  // HTTP 상태 코드 200 (OK)
+                .andExpect(content().string("hi"));  // 일부러 틀린 코드
+    }
 
 }
