@@ -8,6 +8,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      MYSQL_ROOT_PASSWORD: test1234
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: segyeong
+      MYSQL_PASSWORD: test1234
+
     services:
       mysql:
         image: mysql:latest
