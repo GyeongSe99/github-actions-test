@@ -31,12 +31,7 @@ jobs:
             app: java@17
             options:
               ports: 8080
-            context:
-              git:
-                url: git@github.com:${{ github.repository }}.git
-                ref: ${{ github.ref }}
-              preset: java-springboot
-            envs:
+              env:
               - name: RDS_URL
                 value: ${{ secrets.RDS_URL }}
               - name: MYSQL_USERNAME
@@ -49,3 +44,8 @@ jobs:
                 value: ${{ secrets.MYSQL_DBNAME }}
               - name: JWT_SECRET_KEY
                 value: ${{ secrets.JWT_SECRET_KEY }}
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
+              preset: java-springboot
