@@ -1,53 +1,61 @@
-name: deploy-dev.yml
+name: deploy-dev
+
 on:
   workflow_dispatch:
   push:
     branches:
       - dev
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout source code
         uses: actions/checkout@v3
-      - name: Connect deploy key
+
+      - name: Connect deploy key to GitHub (Cloudtype)
         uses: cloudtype-github-actions/connect@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
           ghtoken: ${{ secrets.GHP_TOKEN }}
 
-      - name: Set environment variables
+      - name: Generate cloudtype.yml with secrets
         run: |
-          touch ./.env
-          echo "${{ secrets.SERVER_ENV }}" >> ./.env
+          cat <<EOF > cloudtype.yml
+          name: cicdtest
 
-      - name: Deploy
+          services:
+            app:
+              app: java@17
+              build:
+                dockerfile: Dockerfile
+              options:
+                ports: 8080
+              context:
+                git:
+                  url: git@github.com:${{ github.repository }}.git
+                  ref: ${{ github.ref }}
+                preset: java-springboot
+              env:
+                - name: RDS_URL
+                  value: "${{ secrets.RDS_URL }}"
+                - name: MYSQL_USERNAME
+                  value: "${{ secrets.MYSQL_USERNAME }}"
+                - name: MYSQL_PASSWORD
+                  value: "${{ secrets.MYSQL_PASSWORD }}"
+                - name: MYSQL_PORT
+                  value: "${{ secrets.MYSQL_PORT }}"
+                - name: MYSQL_DBNAME
+                  value: "${{ secrets.MYSQL_DBNAME }}"
+                - name: JWT_SECRET_KEY
+                  value: "${{ secrets.JWT_SECRET_KEY }}"
+          EOF
+
+      - name: Deploy to Cloudtype
         uses: cloudtype-github-actions/deploy@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
           project: jay45652/cicdtest
           stage: main
-          yaml: |
-            name: cicdtest
-            app: java@17
-            options:
-              ports: 8080
-            context:
-              git:
-                url: git@github.com:${{ github.repository }}.git
-                ref: ${{ github.ref }}
-              preset: java-springboot
-            env:
-              - name: RDS_URL
-                value: ${{ secrets.RDS_URL }}
-              - name: MYSQL_USERNAME
-                value: ${{ secrets.MYSQL_USERNAME }}
-              - name: MYSQL_PASSWORD
-                value: ${{ secrets.MYSQL_PASSWORD }}
-              - name: MYSQL_PORT
-                value: ${{ secrets.MYSQL_PORT }}
-              - name: MYSQL_DBNAME
-                value: ${{ secrets.MYSQL_DBNAME }}
-              - name: JWT_SECRET_KEY
-                value: ${{ secrets.JWT_SECRET_KEY }}
+          path: cloudtype.yml
