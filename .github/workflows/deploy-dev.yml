@@ -38,3 +38,16 @@ jobs:
                 url: git@github.com:${{ github.repository }}.git
                 ref: ${{ github.ref }}
               preset: java-springboot
+            env:
+              - name: RDS_URL
+                value: ${{ secrets.RDS_URL }}
+              - name: MYSQL_USERNAME
+                value: ${{ secrets.MYSQL_USERNAME }}
+              - name: MYSQL_PASSWORD
+                value: ${{ secrets.MYSQL_PASSWORD }}
+              - name: MYSQL_PORT
+                value: ${{ secrets.MYSQL_PORT }}
+              - name: MYSQL_DBNAME
+                value: ${{ secrets.MYSQL_DBNAME }}
+              - name: JWT_SECRET_KEY
+                value: ${{ secrets.JWT_SECRET_KEY }}
