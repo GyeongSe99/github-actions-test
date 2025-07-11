@@ -20,42 +20,32 @@ jobs:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
           ghtoken: ${{ secrets.GHP_TOKEN }}
 
-      - name: Generate cloudtype.yml with secrets
-        run: |
-          cat <<EOF > cloudtype.yml
-          name: cicdtest
-
-          services:
-            app:
-              app: java@17
-              build:
-                dockerfile: Dockerfile
-              options:
-                ports: 8080
-              context:
-                git:
-                  url: git@github.com:${{ github.repository }}.git
-                  ref: ${{ github.ref }}
-                preset: java-springboot
-              env:
-                - name: RDS_URL
-                  value: "${{ secrets.RDS_URL }}"
-                - name: MYSQL_USERNAME
-                  value: "${{ secrets.MYSQL_USERNAME }}"
-                - name: MYSQL_PASSWORD
-                  value: "${{ secrets.MYSQL_PASSWORD }}"
-                - name: MYSQL_PORT
-                  value: "${{ secrets.MYSQL_PORT }}"
-                - name: MYSQL_DBNAME
-                  value: "${{ secrets.MYSQL_DBNAME }}"
-                - name: JWT_SECRET_KEY
-                  value: "${{ secrets.JWT_SECRET_KEY }}"
-          EOF
-
       - name: Deploy to Cloudtype
         uses: cloudtype-github-actions/deploy@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
           project: jay45652/cicdtest
           stage: main
-          path: cloudtype.yml
+          yaml: |
+            name: cicdtest
+            app: java@17
+            options:
+              ports: 8080
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
+              preset: java-springboot
+            envs:
+              - name: RDS_URL
+                value: ${{ secrets.RDS_URL }}
+              - name: MYSQL_USERNAME
+                value: ${{ secrets.MYSQL_USERNAME }}
+              - name: MYSQL_PASSWORD
+                value: ${{ secrets.MYSQL_PASSWORD }}
+              - name: MYSQL_PORT
+                value: ${{ secrets.MYSQL_PORT }}
+              - name: MYSQL_DBNAME
+                value: ${{ secrets.MYSQL_DBNAME }}
+              - name: JWT_SECRET_KEY
+                value: ${{ secrets.JWT_SECRET_KEY }}
